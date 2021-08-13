@@ -1,0 +1,13 @@
+.newMovieList {
+  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  list-style-type: none;
+  font-weight: 700;
+  font-size: 20px;
+}
+.newMovieList li {
+  margin: 15px;
+  color: black;
+}
