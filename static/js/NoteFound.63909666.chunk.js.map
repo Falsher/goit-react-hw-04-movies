@@ -1,0 +1,1 @@
+{"version":3,"sources":["pages/NoteFound.js"],"names":["NoteFound"],"mappings":"mMAAe,SAASA,IACtB,OACE,mCACE","file":"static/js/NoteFound.63909666.chunk.js","sourcesContent":["export default function NoteFound() {\r\n  return (\r\n    <>\r\n      <h1>404 Страница не найдена</h1>\r\n    </>\r\n  );\r\n}\r\n"],"sourceRoot":""}
