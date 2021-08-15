@@ -1,5 +1,5 @@
 import * as ApiService from '../components/apiservice/apiservice';
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { useState, useEffect, lazy, useMemo, Suspense } from 'react';
 import {
   useParams,
   Switch,
@@ -14,7 +14,7 @@ const Cast = lazy(() => import('./Cast'));
 const Reviews = lazy(() => import('./Reviews'));
 export default function MovieDetailsPage() {
   const location = useLocation();
-
+  const prevLocet = useMemo(() => location?.state?.from ?? '/', []);
   const history = useHistory();
   const { url, path } = useRouteMatch();
   const { slug } = useParams();
@@ -25,16 +25,15 @@ export default function MovieDetailsPage() {
     ApiService.fetchMovieId(moviesId).then(setMovie);
   }, [moviesId]);
   const GoBack = () => {
-    history.push(location?.state?.from ?? '/');
+    history.push(prevLocet);
   };
   return (
     <>
+      <button type="button" onClick={GoBack}>
+        Go back
+      </button>
       {movie && (
         <>
-          <button type="button" onClick={GoBack}>
-            Go back
-          </button>
-
           <div>
             <img
               src={`https://image.tmdb.org/t/p/w500${movie.data.poster_path}`}
@@ -48,30 +47,24 @@ export default function MovieDetailsPage() {
               return <p key={genre.id}>{genre.name}</p>;
             })}
           </div>
+          <hr />
+
+          <NavLink to={`${url}/cast`}>Cast</NavLink>
+
+          <NavLink to={`${url}/reviews`}>Reviews</NavLink>
+
+          <Suspense fallback={<div>Loading...</div>}>
+            <Switch>
+              <Route path={`${path}/cast`}>
+                <Cast />
+              </Route>
+              <Route path={`${path}/reviews`}>
+                <Reviews />
+              </Route>
+            </Switch>
+          </Suspense>
         </>
       )}
-      <hr />
-
-      {movie && (
-        <ul>
-          <li>
-            <NavLink to={`${url}/cast`}>Cast</NavLink>
-          </li>
-          <li>
-            <NavLink to={`${url}/reviews`}>Reviews</NavLink>
-          </li>
-        </ul>
-      )}
-      <Suspense fallback={<div>Loading...</div>}>
-        <Switch>
-          <Route path={`${path}/cast`}>
-            <Cast />
-          </Route>
-          <Route path={`${path}/reviews`}>
-            <Reviews />
-          </Route>
-        </Switch>
-      </Suspense>
     </>
   );
 }
